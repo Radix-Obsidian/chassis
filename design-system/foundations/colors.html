@@ -1,0 +1,42 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Color — DOT Navigator</title>
+<style>
+  :root {
+    --ink: oklch(21% 0.018 264); --paper: oklch(96.5% 0.012 83); --surface: oklch(99.2% 0.004 83);
+    --muted: oklch(50% 0.016 264); --line: oklch(87% 0.012 83);
+    --red: oklch(52% 0.214 27); --brass: oklch(66% 0.12 74); --steel: oklch(52% 0.07 245); --good: oklch(57% 0.13 152);
+    --serif: "Iowan Old Style", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); padding: 40px; }
+  h1 { font-family: var(--serif); font-size: 28px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; margin-top: 28px; }
+  .sw { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .chip { height: 84px; }
+  .meta { padding: 10px 12px; }
+  .name { font-weight: 600; font-size: 14px; }
+  .val { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .role { font-size: 12px; color: var(--muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+  <span class="eyebrow">DOT Navigator · Foundations</span>
+  <h1>Color</h1>
+  <p class="role">Deep regulatory ink on warm paper. Safety-red carries urgency and the gating audit; brass marks deadlines; steel labels data; green is "cleared".</p>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:oklch(21% 0.018 264)"></div><div class="meta"><div class="name" style="color:#fff;background:oklch(21% 0.018 264);padding:0">&nbsp;</div><div class="name">Ink</div><div class="val">oklch(21% .018 264)</div><div class="role">Text, dark surfaces</div></div></div>
+    <div class="sw"><div class="chip" style="background:oklch(96.5% 0.012 83)"></div><div class="meta"><div class="name">Paper</div><div class="val">oklch(96.5% .012 83)</div><div class="role">App background</div></div></div>
+    <div class="sw"><div class="chip" style="background:oklch(52% 0.214 27)"></div><div class="meta"><div class="name">Safety Red</div><div class="val">oklch(52% .214 27)</div><div class="role">Primary · urgency · audit</div></div></div>
+    <div class="sw"><div class="chip" style="background:oklch(66% 0.12 74)"></div><div class="meta"><div class="name">Brass</div><div class="val">oklch(66% .12 74)</div><div class="role">Deadlines · due-soon</div></div></div>
+    <div class="sw"><div class="chip" style="background:oklch(52% 0.07 245)"></div><div class="meta"><div class="name">Steel</div><div class="val">oklch(52% .07 245)</div><div class="role">Data · CFR cites</div></div></div>
+    <div class="sw"><div class="chip" style="background:oklch(57% 0.13 152)"></div><div class="meta"><div class="name">Cleared</div><div class="val">oklch(57% .13 152)</div><div class="role">Done · compliant</div></div></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Typography — DOT Navigator</title>
+<style>
+  :root {
+    --ink: oklch(21% 0.018 264); --paper: oklch(96.5% 0.012 83); --muted: oklch(50% 0.016 264);
+    --steel: oklch(52% 0.07 245); --line: oklch(87% 0.012 83);
+    --serif: "Iowan Old Style", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); padding: 40px; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .row { padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .label { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .display { font-family: var(--serif); font-size: 56px; line-height: 0.94; letter-spacing: -0.02em; font-weight: 600; }
+  .h2 { font-family: var(--serif); font-size: 30px; letter-spacing: -0.01em; font-weight: 600; }
+  .body { font-size: 17px; max-width: 52ch; color: var(--ink); }
+  .data { font-family: var(--mono); font-size: 13px; color: var(--steel); }
+</style>
+</head>
+<body>
+  <span class="eyebrow">DOT Navigator · Foundations</span>
+  <div class="row"><div class="label">Display — serif, -2% tracking, 0.94 leading</div><div class="display">You have 18 months.</div></div>
+  <div class="row"><div class="label">Heading — serif 600</div><div class="h2">From a raw USDOT number to an audit-ready year</div></div>
+  <div class="row"><div class="label">Body — system sans, 1.55 leading</div><div class="body">The day FMCSA issued your number, a federal countdown began. We turn the whole regulation into a dated roadmap.</div></div>
+  <div class="row" style="border-bottom:none"><div class="label">Data / CFR — mono, steel</div><div class="data">49 CFR 385 Subpart D · 2026-05-15 · 330 days</div></div>
+</body>
+</html>

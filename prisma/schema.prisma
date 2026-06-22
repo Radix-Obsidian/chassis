@@ -1,0 +1,119 @@
+// schema.prisma — the closed-loop data model (D19). This is what turns the open-loop calendar into a
+// co-pilot that REMEMBERS: a carrier's identity, the true state of every milestone, the documents we've
+// prepared for them, and the reminders queued to keep them ahead of deadlines.
+//
+// Provision: a Postgres instance (Railway: one click). Set DATABASE_URL, then `prisma migrate deploy`.
+// Generate the client with `prisma generate` (runs automatically on `npm install` via postinstall).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// A carrier IS the account. Identity is the email (passwordless magic-link); there are no passwords.
+model Carrier {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  legalName     String?
+  dotNumber     String?
+  carrierType   String    @default("interstate") // "interstate" | "intrastate"
+  authorityDate DateTime? // anchors the entire 18-month calendar; null until onboarding
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Subscription (the done-for-you co-pilot). Status is kept fresh by the Stripe webhook and is the
+  // source of truth for entitlement; the rest is for display + the billing portal.
+  stripeCustomerId   String?   @unique
+  subscriptionId     String?
+  subscriptionStatus String? // trialing | active | past_due | canceled | incomplete | unpaid
+  currentPeriodEnd   DateTime?
+
+  milestoneStates MilestoneState[]
+  documents       Document[]
+  reminders       Reminder[]
+  sessions        Session[]
+
+  @@index([authorityDate])
+}
+
+// True state of a single milestone for a carrier. Absence = not started. This is the persistence the
+// in-memory dashboard never had — the difference between "informs" and "tracks".
+model MilestoneState {
+  id           String    @id @default(cuid())
+  carrier      Carrier   @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+  carrierId    String
+  milestoneKey String // matches calendar-engine milestone keys
+  completedAt  DateTime? // set = done; null = open
+  notes        String?
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([carrierId, milestoneKey])
+  @@index([carrierId])
+}
+
+// A document we PREPARE for the carrier (the "does the work" half). payload holds the pre-filled field
+// data; rendering to PDF happens at request time. Types: mcs150 | dqf | dvir | audit-binder.
+model Document {
+  id          String   @id @default(cuid())
+  carrier     Carrier  @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+  carrierId   String
+  type        String
+  status      String   @default("draft") // draft | ready
+  payload     Json
+  generatedAt DateTime @default(now())
+
+  @@index([carrierId, type])
+}
+
+// A queued proactive nudge (the "keeps you in the loop" half). A cron worker scans for due reminders
+// and sends them via Resend, flipping status. milestoneKey is the obligation it's about (nullable for
+// digest-style nudges).
+model Reminder {
+  id           String    @id @default(cuid())
+  carrier      Carrier   @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+  carrierId    String
+  milestoneKey String?
+  threshold    String? // "T-30" | "T-7" | "T-1" | "overdue" — the bucket; dedupes one send per stage
+  subject      String
+  sendAt       DateTime
+  channel      String    @default("email")
+  status       String    @default("pending") // pending | sent | failed | skipped
+  sentAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  // one reminder per (carrier, milestone, stage) — the unique key the sweep claims before sending,
+  // so a milestone fires once at T-30, once at T-7, etc., even if the cron runs many times a day.
+  @@unique([carrierId, milestoneKey, threshold])
+  @@index([status, sendAt])
+  @@index([carrierId])
+}
+
+// Passwordless login: a single-use magic-link token (we store only the SHA-256 hash; the raw token is
+// emailed and never persisted). Short TTL, single consume.
+model MagicLink {
+  id         String    @id @default(cuid())
+  email      String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
+}
+
+// A logged-in session: again we persist only the hash of the session token; the raw value lives in an
+// httpOnly cookie. Deleting the row (or expiry) logs the carrier out everywhere.
+model Session {
+  id        String   @id @default(cuid())
+  carrier   Carrier  @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+  carrierId String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([carrierId])
+}

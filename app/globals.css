@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   Design system — "The Carrier's Almanac"
+   A premium regulatory field-manual aesthetic: deep ink on warm paper, a
+   confident DOT safety-red, brass + steel secondaries, layered depth, a faint
+   paper grain, dramatic serif display vs. mono data. Built to read as an
+   official document that a modern operator would actually trust.
+   ============================================================================ */
+:root {
+  --color-ink: oklch(21% 0.018 264);
+  --color-ink-2: oklch(34% 0.02 264);
+  --color-paper: oklch(96.5% 0.012 83);
+  --color-paper-2: oklch(93.2% 0.016 83);
+  --color-surface: oklch(99.2% 0.004 83);
+  --color-muted: oklch(50% 0.016 264);
+  --color-line: oklch(87% 0.012 83);
+  --color-line-strong: oklch(78% 0.016 83);
+
+  --color-red: oklch(52% 0.214 27); /* DOT safety red */
+  --color-red-2: oklch(44% 0.2 27);
+  --color-red-soft: oklch(95% 0.035 30);
+  --color-brass: oklch(66% 0.12 74); /* deadline / warning */
+  --color-steel: oklch(52% 0.07 245); /* secondary data accent */
+  --color-good: oklch(57% 0.13 152);
+
+  /* back-compat aliases so the navigator components (built on v1 tokens) inherit the elevated palette */
+  --color-accent: var(--color-red);
+  --color-accent-soft: var(--color-red-soft);
+  --color-warn: var(--color-brass);
+
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --text-hero: clamp(2.9rem, 0.6rem + 8vw, 6.5rem);
+  --text-h2: clamp(1.7rem, 1rem + 2.6vw, 2.9rem);
+  --radius-card: 16px;
+
+  --shadow-sm: 0 1px 2px oklch(20% 0.02 264 / 0.05), 0 2px 6px oklch(20% 0.02 264 / 0.04);
+  --shadow-md: 0 2px 4px oklch(20% 0.02 264 / 0.05), 0 12px 28px oklch(20% 0.02 264 / 0.1);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* faint paper grain — atmosphere */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+}
+::selection {
+  background: var(--color-red);
+  color: white;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* engraved grid — used behind the hero only */
+.engrave {
+  background-image: linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black, transparent 75%);
+  opacity: 0.5;
+}
+
+@layer components {
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  /* a stamped, official-looking label */
+  .stamp {
+    @apply inline-flex items-center gap-1.5 rounded-[6px] border px-2.5 py-1;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-color: var(--color-red);
+    color: var(--color-red-2);
+    background: var(--color-red-soft);
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium;
+    border-color: var(--color-line-strong);
+    color: var(--color-muted);
+  }
+  .cfr {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.01em;
+    color: var(--color-steel);
+  }
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 font-semibold text-white;
+    background: var(--color-red);
+    box-shadow: var(--shadow-sm);
+    transition: transform 200ms var(--ease), filter 200ms var(--ease), box-shadow 200ms var(--ease);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.07);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .btn-primary:focus-visible {
+    outline: 3px solid var(--color-red-soft);
+    outline-offset: 2px;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 font-medium;
+    color: var(--color-ink);
+    transition: gap 200ms var(--ease);
+  }
+  .btn-ghost:hover {
+    gap: 0.75rem;
+  }
+  .field {
+    @apply w-full rounded-lg border px-3.5 py-2.5 text-base outline-none;
+    background: var(--color-surface);
+    border-color: var(--color-line-strong);
+    transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+  }
+  .field:focus {
+    border-color: var(--color-red);
+    box-shadow: 0 0 0 3px var(--color-red-soft);
+  }
+}
+
+/* print — the paid audit packet should save as a clean, auditor-ready PDF */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    background-image: none !important;
+  }
+  .packet-page {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .card {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}

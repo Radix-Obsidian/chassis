@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.env*.local
+dist/
+.gstack/
+# TS incremental build artifact — if uploaded, Railway's nixpacks cache-mount
+# (which targets /app/tsconfig.tsbuildinfo as a directory) fails to start the build.
+*.tsbuildinfo
